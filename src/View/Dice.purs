@@ -10,8 +10,8 @@ import View.Helper.Block as Block
 import View.Helper.BlockElement as BlockElement
 import View.Helper.TextObject as TextObject
 
-render :: Int -> String
-render n =
+render :: String -> Int -> String
+render s n =
   SimpleJSON.writeJSON
     -- https://api.slack.com/reference/messaging/payload
     {
@@ -20,13 +20,13 @@ render n =
       response_type: "ephemeral", -- or "in_channel",
       blocks:
       [ Block.sectionBlock
-        { text: TextObject.plainText { text: show n } }
+        { text: TextObject.plainText { text: show n <> " (" <> s <> ")" } }
       , Block.actionsBlock
         { elements:
           [ BlockElement.actionButton
             { text: "Retry"
             , action_id: "retry"
-            , value: Maybe.Nothing
+            , value: Maybe.Just s
             , style: Maybe.Nothing
             }
           ]

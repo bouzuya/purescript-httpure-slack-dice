@@ -44,6 +44,9 @@ rollDice (Tuple.Tuple a x) = do
     void (Ref.modify (add count) countRef)
   Ref.read countRef
 
+showDice :: Dice -> String
+showDice (Tuple.Tuple a x) = show a <> "d" <> show x
+
 execute :: String -> HTTPure.ResponseM
 execute s = do
   case parseDice s of
@@ -51,4 +54,4 @@ execute s = do
     Maybe.Just dice -> do
       n <- Class.liftEffect (rollDice dice)
       let headers = HTTPure.header "Content-Type" "application/json"
-      HTTPure.ok' headers (ViewDice.render n)
+      HTTPure.ok' headers (ViewDice.render (showDice dice) n)
