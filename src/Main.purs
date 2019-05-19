@@ -9,6 +9,7 @@ import Data.Either as Either
 import Data.Int as Int
 import Data.Maybe as Maybe
 import Effect (Effect)
+import Effect.Class as Class
 import Effect.Console as Console
 import Effect.Exception as Exception
 import HTTPure (Request, ResponseM)
@@ -37,7 +38,8 @@ main = do
     app request =
       case Router.router request of
         Either.Right action -> Action.execute action
-        Either.Left (Router.ClientError _) ->
+        Either.Left (Router.ClientError e) -> do
+          Class.liftEffect (Console.log e)
           HTTPure.badRequest "invalid params"
         Either.Left Router.NotFound ->
           HTTPure.notFound
