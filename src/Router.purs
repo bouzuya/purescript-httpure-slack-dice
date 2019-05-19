@@ -48,15 +48,17 @@ type Payload =
   }
 
 type InteractPayload =
-  { payload ::
-    { actions ::
-        Array
-        { action_id :: String
-        , value :: String
-        -- ...
-        }
-    -- ...
-    }
+  { payload :: String -- JSON
+  }
+
+type InteractPayloadPayload =
+  { actions ::
+      Array
+      { action_id :: String
+      , value :: String
+      -- ...
+      }
+  -- ...
   }
 
 router :: HTTPure.Request -> Either RouteError Action
@@ -65,11 +67,17 @@ router request =
     ["action"] ->
       case request.method of
         HTTPure.Post -> do
-          payload <- fromJSON request.body :: _ _ InteractPayload
+          body' <- fromURLEncoded request.body :: _ _ InteractPayload
+          payload <- fromJSON body'.payload :: _ _ InteractPayloadPayload
           action <-
             Either.note
               (ClientError "no action")
-              (Array.head payload.payload.actions)
+              (Array.head payload.actions)
+          if action.action_id /= "retry"
+            then
+              Either.Left
+                (ClientError ("unknown action_id: " <> action.action_id))
+            else pure unit
           pure (Dice action.value)
         _ -> Either.Left NotFound -- TODO: 405
     ["dice"] ->
