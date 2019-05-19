@@ -11,6 +11,7 @@ import Data.Either (Either)
 import Data.Either as Either
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Show (genericShow)
+import Data.Maybe as Maybe
 import Foreign as Foreign
 import HTTPure as HTTPure
 import Node.URL as URL
@@ -52,7 +53,8 @@ type InteractPayload =
   }
 
 type InteractPayloadPayload =
-  { actions ::
+  { response_url :: String
+  , actions ::
       Array
       { action_id :: String
       , value :: String
@@ -78,12 +80,12 @@ router request =
               Either.Left
                 (ClientError ("unknown action_id: " <> action.action_id))
             else pure unit
-          pure (Dice action.value)
+          pure (Dice (Maybe.Just payload.response_url) action.value)
         _ -> Either.Left NotFound -- TODO: 405
     ["dice"] ->
       case request.method of
         HTTPure.Post -> do
           payload <- fromURLEncoded request.body :: _ _ Payload
-          pure (Dice payload.text)
+          pure (Dice Maybe.Nothing payload.text)
         _ -> Either.Left NotFound -- TODO: 405
     _ -> Either.Left NotFound

@@ -8,10 +8,11 @@ import Prelude
 import Action.Dice as ActionDice
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Show (genericShow)
+import Data.Maybe (Maybe)
 import HTTPure (ResponseM)
 
 data Action
-  = Dice String
+  = Dice (Maybe String) String
 
 derive instance eqAction :: Eq Action
 derive instance genericAction :: Generic Action _
@@ -21,4 +22,5 @@ instance showAction :: Show Action where
 execute :: Action -> ResponseM
 execute =
   case _ of
-    Dice notation -> ActionDice.execute notation
+    Dice responseUrl notation ->
+      ActionDice.execute responseUrl notation

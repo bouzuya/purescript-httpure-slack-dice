@@ -5,7 +5,8 @@ You can edit this file as you like.
 { name =
     "my-project"
 , dependencies =
-    [ "debug"
+    [ "bouzuya-http-client"
+    , "debug"
     , "httpure"
     , "node-process"
     , "node-url"
