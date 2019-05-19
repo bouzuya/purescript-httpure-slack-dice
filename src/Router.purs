@@ -6,6 +6,7 @@ module Router
 import Prelude
 
 import Action (Action(..))
+import Data.Array as Array
 import Data.Either (Either)
 import Data.Either as Either
 import Data.Generic.Rep (class Generic)
@@ -46,9 +47,31 @@ type Payload =
   -- ...
   }
 
+type InteractPayload =
+  { payload ::
+    { actions ::
+        Array
+        { action_id :: String
+        , value :: String
+        -- ...
+        }
+    -- ...
+    }
+  }
+
 router :: HTTPure.Request -> Either RouteError Action
 router request =
   case request.path of
+    ["action"] ->
+      case request.method of
+        HTTPure.Post -> do
+          payload <- fromURLEncoded request.body :: _ _ InteractPayload
+          action <-
+            Either.note
+              (ClientError "no action")
+              (Array.head payload.payload.actions)
+          pure (Dice action.value)
+        _ -> Either.Left NotFound -- TODO: 405
     ["dice"] ->
       case request.method of
         HTTPure.Post -> do
