@@ -1,0 +1,27 @@
+{
+  "name": "purescript-httpure-slack-dice",
+  "description": "slack-dice",
+  "version": "0.0.0",
+  "author": "bouzuya <m@bouzuya.net> (https://bouzuya.net/)",
+  "bugs": {
+    "url": "https://github.com/bouzuya/purescript-httpure-slack-dice/issues"
+  },
+  "devDependencies": {
+    "purescript": "^0.12.5",
+    "spago": "^0.8.0"
+  },
+  "homepage": "https://github.com/bouzuya/purescript-httpure-slack-dice#readme",
+  "keywords": [],
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bouzuya/purescript-httpure-slack-dice.git"
+  },
+  "scripts": {
+    "build": "spago build",
+    "spago": "spago",
+    "start": "node -e \"require('./output/Main/index.js').main();\"",
+    "test": "spago test"
+  }
+}
