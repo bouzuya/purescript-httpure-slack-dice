@@ -65,7 +65,7 @@ router request =
     ["action"] ->
       case request.method of
         HTTPure.Post -> do
-          payload <- fromURLEncoded request.body :: _ _ InteractPayload
+          payload <- fromJSON request.body :: _ _ InteractPayload
           action <-
             Either.note
               (ClientError "no action")
