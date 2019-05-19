@@ -4,8 +4,10 @@ module View.Dice
 
 import Prelude
 
+import Data.Maybe as Maybe
 import Simple.JSON as SimpleJSON
 import View.Helper.Block as Block
+import View.Helper.BlockElement as BlockElement
 import View.Helper.TextObject as TextObject
 
 render :: Int -> String
@@ -19,5 +21,15 @@ render n =
       blocks:
       [ Block.sectionBlock
         { text: TextObject.plainText { text: show n } }
+      , Block.actionsBlock
+        { elements:
+          [ BlockElement.actionButton
+            { text: "Retry"
+            , action_id: "retry"
+            , value: Maybe.Nothing
+            , style: Maybe.Nothing
+            }
+          ]
+        }
       ]
     }
